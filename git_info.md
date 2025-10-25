@@ -1,4 +1,4 @@
-# Best Practices for Working with Git
+## Best Practices for Working with Git
 
 ## Setting Up Git with SSH
 
@@ -29,7 +29,7 @@ Go to **GitHub → Settings → SSH and GPG keys → New SSH Key**, paste the ke
 To confirm that GitHub recognizes the key, run:
 
 ```sh
-ssh -T git@github.com
+ssh -T [git@github.com](mailto:git@github.com)
 ```
 
 If successful, GitHub will return a message like:
@@ -38,23 +38,31 @@ If successful, GitHub will return a message like:
 Hi username! You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
+
 ---
 
 ## What to Check Before Running `git add`
 
 Before staging files with `git add`, always:
+
 1. **Check which files have changed**:
-   ```sh
-   git status
-   ```
+
+```sh
+git status
+```
+
 2. **Review changes before staging**:
-   ```sh
-   git diff file.txt
-   ```
+
+```sh
+git diff file.txt
+```
+
 3. **Add only necessary files individually**:
-   ```sh
-   git add file.txt
-   ```
+
+```sh
+git add file.txt
+```
+
 4. **Never use `git add .`**, as it can accidentally stage unwanted changes.
 
 ---
@@ -70,11 +78,13 @@ We should follow a branching strategy such as Git Flow or GitHub Flow:
 - Feature branches (e.g., `feature/xyz`) for new functionality.
 - Bug fix branches (e.g., `fix/xyz`) for patches.
 
+
 ### 2. **Create a New Branch**
 
 ```sh
 git switch -c feature/new-feature
 ```
+
 
 ### 3. **Switch Between Branches**
 
@@ -84,22 +94,27 @@ To switch branches, use:
 git switch main
 ```
 
+
 ### 4. **Merge Changes Using GitHub**
 
 Instead of merging locally, we use GitHub’s pull request (merge request) feature:
 
 1. Push your feature branch to GitHub:
-   ```sh
-   git push origin feature/new-feature
-   ```
+
+```sh
+git push origin feature/new-feature
+```
+
 2. Go to the GitHub repository and create a **Pull Request**.
 3. Request reviews and address any comments.
 4. Once approved, click **Merge**.
 5. Delete the feature branch both on GitHub and locally:
-   ```sh
-   git branch -d feature/new-feature
-   git push origin --delete feature/new-feature
-   ```
+
+```sh
+git branch -d feature/new-feature
+git push origin --delete feature/new-feature
+```
+
 
 ---
 
@@ -136,9 +151,9 @@ A good commit message should be **clear, concise, and descriptive**. Follow this
 When making a commit, Git will open a text editor for you to enter the message. Make sure to write meaningful descriptions.
 
 Avoid vague commit messages like:
-❌ `"Fixed stuff"`  
-❌ `"Updated code"`  
-❌ `"Bug fixes"`  
+❌ `"Fixed stuff"`
+❌ `"Updated code"`
+❌ `"Bug fixes"`
 
 ---
 
@@ -186,6 +201,7 @@ After writing a commit message in the text editor that opens, save and exit. The
 git push origin main
 ```
 
+
 ---
 
 ## **Fixing a Repository That Has Large Files**
@@ -198,6 +214,7 @@ If we accidentally committed large files, we must **rewrite history**.
 git rev-list --objects --all | grep -E '\.txt$|\.csv$'
 ```
 
+
 ### **2. Remove Large Files from History**
 
 Using `git filter-repo` (Recommended):
@@ -205,6 +222,7 @@ Using `git filter-repo` (Recommended):
 ```sh
 git filter-repo --path path/to/largefile.csv --invert-paths --force
 ```
+
 
 ### **3. Force Push the Cleaned Repository**
 
@@ -230,3 +248,238 @@ git push origin --force --all
 
 By following these best practices, we can ensure a clean, efficient, and well-managed Git workflow. 🚀
 
+add in this tutorial how to do pull requests in github
+
+Here’s the updated Git best practices tutorial including a detailed explanation of **how to create a pull request (PR) on GitHub**, integrated seamlessly into your workflow.
+
+***
+
+# Best Practices for Working with Git
+
+## Setting Up Git with SSH
+
+To authenticate with GitHub securely, we use SSH keys instead of passwords.
+
+### 1. Generate an SSH Key
+
+```sh
+ssh-keygen -t ed25519 -C "your-email@example.com"
+```
+
+This creates a key pair, typically stored at `~/.ssh/id_ed25519` (private key) and `~/.ssh/id_ed25519.pub` (public key).[^1]
+
+### 2. Add the SSH Key to GitHub
+
+Copy the public key and add it to GitHub:
+
+```sh
+cat ~/.ssh/id_ed25519.pub
+```
+
+Go to **GitHub → Settings → SSH and GPG keys → New SSH Key**, paste the key, and save it.[^1]
+
+### 3. Test the SSH Connection
+
+```sh
+ssh -T git@github.com
+```
+
+If successful, GitHub will respond with:
+
+```
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+
+***
+
+## What to Check Before Running `git add`
+
+Before staging files:
+
+1. View changes:
+
+```sh
+git status
+```
+
+2. Review differences:
+
+```sh
+git diff file.txt
+```
+
+3. Stage only needed files:
+
+```sh
+git add file.txt
+```
+
+4. Avoid `git add .` to prevent staging unwanted files.[^2]
+
+***
+
+## Working with Git Branches
+
+### 1. Use a Clear Branching Strategy
+
+- `main` → production-ready branch
+- `develop` → ongoing development
+- `feature/xyz` → new features
+- `fix/xyz` → bug fixes[^2]
+
+
+### 2. Create a New Branch
+
+```sh
+git switch -c feature/new-feature
+```
+
+
+### 3. Switch Branches
+
+```sh
+git switch main
+```
+
+
+***
+
+## Making Pull Requests on GitHub
+
+A **pull request (PR)** lets you propose and collaborate on changes to a remote repository before merging them into a base branch like `main`.[^3][^4]
+
+### 1. Push Your Branch to GitHub
+
+After committing locally:
+
+```sh
+git push origin feature/new-feature
+```
+
+
+### 2. Create a Pull Request
+
+1. Go to your repository on **GitHub.com**.
+2. You’ll see a **Compare \& pull request** banner at the top. Click it.
+Alternatively, go to the **Pull Requests** tab and click **New Pull Request**.
+3. Ensure:
+    - The **base branch** is set to `main` (or `develop`).
+    - The **compare branch** is your feature branch (`feature/new-feature`).
+4. Add a clear **title** and detailed **description** for your pull request.
+    - Explain what the change does.
+    - Mention any related issues (e.g., *Fixes \#42*).
+5. Click **Create Pull Request** or optionally **Create Draft Pull Request** if it’s not ready for review.[^4][^1]
+
+### 3. Request and Manage Reviews
+
+After creating the PR:
+
+- Assign **reviewers** using the right sidebar.
+- Reviewers can **comment**, **approve**, or **request changes**.[^5][^4]
+- You can also discuss changes directly in the **Files Changed** tab.
+
+
+### 4. Merge the Pull Request
+
+Once the PR is approved:
+
+1. Click **Merge Pull Request** and confirm.
+2. Delete the branch:
+
+```sh
+git branch -d feature/new-feature
+git push origin --delete feature/new-feature
+```
+
+This keeps your branch list clean.[^3][^1]
+
+***
+
+## Understanding `git push`
+
+`git push` uploads commits to the remote branch. Before pushing:
+
+```sh
+git commit
+git push origin main
+```
+
+This syncs local changes with GitHub.[^1]
+
+***
+
+## Writing Good Commit Messages
+
+Write meaningful, structured commit messages:
+
+```sh
+<short summary>
+
+<optional detailed explanation>
+```
+
+Avoid vague ones like “fixed stuff” or “update code”.[^2]
+
+***
+
+## Avoiding Large Files in Git
+
+Large files make repositories slow. Use `.gitignore`:
+
+```sh
+*.log
+*.csv
+*.mp4
+*.zip
+dist/
+build/
+__pycache__/
+```
+
+Commit and push the `.gitignore` file:
+
+```sh
+git add .gitignore
+git commit -m "Add .gitignore"
+git push origin main
+```
+
+
+***
+
+## Fixing a Repository with Large Files
+
+To clean large files from history:
+
+1. Identify large files:
+
+```sh
+git rev-list --objects --all | grep -E '\.csv$|\.mp4$'
+```
+
+2. Remove them:
+
+```sh
+git filter-repo --path path/to/largefile.csv --invert-paths --force
+```
+
+3. Force push clean history:
+
+```sh
+git push origin --force --all
+```
+
+
+***
+
+## Summary of Best Practices
+
+✅ Use SSH for secure Git authentication.
+✅ Always check `git status` and `git diff` before staging.
+✅ Avoid `git add .` — stage files individually.
+✅ Use `git switch` for branches.
+✅ Create pull requests in GitHub for proper code review.
+✅ Write meaningful commit messages.
+✅ Avoid large files; add them to `.gitignore`.
+✅ Use `git filter-repo` to clean unwanted history.
